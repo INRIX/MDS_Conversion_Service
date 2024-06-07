@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;

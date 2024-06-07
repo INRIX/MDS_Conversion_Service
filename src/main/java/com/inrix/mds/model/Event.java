@@ -5,7 +5,6 @@ import com.inrix.mds.model.converter.TripIdsConverter;
 import com.inrix.mds.model.enums.EventType;
 import com.inrix.mds.model.enums.VehicleState;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -14,7 +13,8 @@ import java.util.List;
 import java.util.UUID;
 @Entity
 @Table(name = "event")
-public class Event {
+public class
+Event {
     @Id
     @NonNull
     @Column(name = "event_id", columnDefinition = "VARCHAR(36)")  // USE uuid for POSTGRES
