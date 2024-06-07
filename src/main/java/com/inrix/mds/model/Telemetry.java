@@ -1,5 +1,6 @@
 package com.inrix.mds.model;
 
+import com.inrix.mds.model.converter.TripIdsConverter;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -13,28 +14,30 @@ import java.util.UUID;
 public class Telemetry {
     @Id
     @NonNull
-    @Column(name = "telemetry_id")
+    @Column(name = "telemetry_id", columnDefinition = "BINARY(16)")
     private UUID telemetryId;
     @NonNull
-    @Column(name = "device_id")
+    @Column(name = "device_id", columnDefinition = "BINARY(16)")
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id")
+    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id")
+    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
     private UUID dataProviderId;
     @NonNull
+    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
     private Timestamp timestamp;
     @NonNull
     @Column(name = "trip_ids")
-    @ElementCollection
+    @Convert(converter = TripIdsConverter.class)
     private List<UUID> tripIds;
     @NonNull
     @Column(name = "journey_id")
     private UUID journeyId;
     @NonNull
     @OneToOne
+    @JoinColumn(name = "location", referencedColumnName = "gpsId")
     private GPS location;
     @NonNull
     @Column(name = "battery_percent")

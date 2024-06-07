@@ -10,40 +10,40 @@ import java.util.UUID;
 @Table(name = "trip")
 public class Trip {
 
-//    TODO: OPTIONAL WHEN DB IMPLEMENTED - data_provider & journey_id
 //    Not Required (as of yet)
 //   =================================
 //    private TripType trip_type;
 //    private Map trip_attributes;
 //   =================================
+
     @Id
     @NonNull
-    @Column(name = "trip_id")
+    @Column(name = "trip_id", columnDefinition = "BINARY(16)")
     private UUID tripId;
     @NonNull
-    @Column(name = "provider_id")
+    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id")
+    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
     private UUID dataProviderId;
     @NonNull
-    @Column(name = "device_id")
+    @Column(name = "device_id", columnDefinition = "BINARY(16)")
     private UUID deviceId;
     @Nullable
-    @Column(name = "journey_id")
+    @Column(name = "journey_id", columnDefinition = "BINARY(16)")
     private UUID journeyId;
     @NonNull
-    @Column(name = "start_time")
+    @Column(name = "start_time", columnDefinition = "TIMESTAMP")
     private Timestamp startTime;
     @NonNull
-    @Column(name = "end_time")
+    @Column(name = "end_time", columnDefinition = "TIMESTAMP")
     private Timestamp endTime;
     @NonNull
-    @Column(name = "start_location")
+    @JoinColumn(name = "start_location", referencedColumnName = "gpsId")
     @OneToOne
     private GPS startLocation;
     @NonNull
-    @Column(name = "end_location")
+    @JoinColumn(name = "end_location", referencedColumnName = "gpsId")
     @OneToOne
     private GPS endLocation;
     @NonNull

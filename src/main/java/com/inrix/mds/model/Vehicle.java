@@ -1,5 +1,6 @@
 package com.inrix.mds.model;
 
+import com.inrix.mds.model.converter.PropulsionTypeConverter;
 import com.inrix.mds.model.enums.PropulsionType;
 import com.inrix.mds.model.enums.VehicleType;
 import jakarta.persistence.*;
@@ -12,24 +13,22 @@ import java.util.UUID;
 @Table(name = "vehicle")
 public class Vehicle {
 
-//    TODO: ALL FIELDS REQUIRED WHEN DB IMPLEMENTED
-
     @Id
     @NonNull
     @Column(name = "vehicle_id")
     private String vehicleId;
     @NonNull
-    @Column(name = "device_id")
+    @Column(name = "device_id", columnDefinition = "BINARY(16)")
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id")
+    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
     private UUID providerId;
     @NonNull
     @Column(name = "vehicle_type")
     private VehicleType vehicleType;
     @NonNull
     @Column(name = "propulsion_type")
-    @ElementCollection
+    @Convert(converter = PropulsionTypeConverter.class)
     private List<PropulsionType> propulsionType;
     @NonNull
     @Column(name = "battery_capacity")

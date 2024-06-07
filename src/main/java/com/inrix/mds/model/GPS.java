@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class GPS {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int gpsId;
+    private Integer gpsId;
     private Double lat;
     private Double lng;
     private Double altitude;

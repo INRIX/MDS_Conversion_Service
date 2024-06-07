@@ -1,8 +1,11 @@
 package com.inrix.mds.model;
 
+import com.inrix.mds.model.converter.EventTypeConverter;
+import com.inrix.mds.model.converter.TripIdsConverter;
 import com.inrix.mds.model.enums.EventType;
 import com.inrix.mds.model.enums.VehicleState;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -14,31 +17,32 @@ import java.util.UUID;
 public class Event {
     @Id
     @NonNull
-    @Column(name = "event_id")
+    @Column(name = "event_id", columnDefinition = "VARCHAR(36)")  // USE uuid for POSTGRES
     private UUID eventId;
     @NonNull
-    @Column(name = "device_id")
+    @Column(name = "device_id", columnDefinition = "VARCHAR(36)") // USE uuid for POSTGRES
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id")
+    @Column(name = "provider_id", columnDefinition = "BINARY(16)") // USE uuid for POSTGRES
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id")
+    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
     private UUID dataProviderId;
     @NonNull
     @Column(name = "vehicle_state")
     private VehicleState vehicleState;
     @NonNull
     @Column(name = "event_types")
-    @ElementCollection
+    @Convert(converter = EventTypeConverter.class)
     private List<EventType> eventTypes;
     @NonNull
+    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
     private Timestamp timestamp;
     @NonNull
     @Column(name = "battery_percent")
     private Integer batteryPercent;
     @Column(name = "trip_ids")
-    @ElementCollection
+    @Convert(converter = TripIdsConverter.class)
     private List<UUID> tripIds;
 
     @PrePersist
