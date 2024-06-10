@@ -11,7 +11,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = MDSConstants.LIVE_API_VERSION + "/vehicles")
 public class VehicleController {
+    @GetMapping()
+    public void Vehicle (@RequestParam(required = false) UUID deviceId){}
 
     @GetMapping(value = "/status")
     public void vehicleStatus (@RequestParam(required = false) UUID deviceId){}
+
 }
