@@ -51,7 +51,7 @@ public class Trip {
     private Integer duration;
 //    @NonNull
     private Integer distance;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "telemetry_id")
     private Telemetry telemetry;
     @ManyToOne(fetch = FetchType.LAZY)

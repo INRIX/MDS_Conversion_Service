@@ -27,9 +27,8 @@ public class Telemetry {
     @NonNull
     @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
     private Timestamp timestamp;
-    @NonNull
+//    @NonNull
     @Column(name = "trip_ids")
-    @OneToMany
     @Convert(converter = TripIdsConverter.class)
     @JoinColumn(name = "trip_id")
     private List<Trip> tripIds;

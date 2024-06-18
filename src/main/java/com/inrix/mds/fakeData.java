@@ -58,10 +58,11 @@ public class fakeData {
         List<Trip> aa = new ArrayList<>();
         aa.add(t);
         event.setTripIds(aa);
+        eventRepository.save(event);
         tripRepository.save(t);
 
 //        event.setTripIds(aa);
-        eventRepository.save(event);
+
 
     }
 //        Event event = new Event();
