@@ -18,10 +18,10 @@ public class Vehicle {
     @Column(name = "vehicle_id")
     private String vehicleId;
     @NonNull
-    @Column(name = "device_id", columnDefinition = "BINARY(16)")
+    @Column(name = "device_id")
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
+    @Column(name = "provider_id")
     private UUID providerId;
     @NonNull
     @Column(name = "vehicle_type")
@@ -36,6 +36,9 @@ public class Vehicle {
     @NonNull
     @Column(name = "maximum_speed")
     private Integer maximumSpeed;
+
+    @OneToMany(mappedBy = "vehicle")
+    private List<Event> events;
 
     @NonNull
     public String getVehicleId() {
@@ -99,5 +102,11 @@ public class Vehicle {
     public void setMaximumSpeed(@NonNull Integer maximumSpeed) {
         this.maximumSpeed = maximumSpeed;
     }
+    public List<Event> getEvents() {
+        return events;
+    }
 
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
 }

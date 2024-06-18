@@ -18,38 +18,45 @@ public class Trip {
 
     @Id
     @NonNull
-    @Column(name = "trip_id", columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "trip_id")
     private UUID tripId;
-    @NonNull
-    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
+//    @NonNull
+    @Column(name = "provider_id")
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
+    @Column(name = "data_provider_id")
     private UUID dataProviderId;
-    @NonNull
-    @Column(name = "device_id", columnDefinition = "BINARY(16)")
+//    @NonNull
+    @Column(name = "device_id")
     private UUID deviceId;
     @Nullable
-    @Column(name = "journey_id", columnDefinition = "BINARY(16)")
+    @Column(name = "journey_id")
     private UUID journeyId;
-    @NonNull
+//    @NonNull
     @Column(name = "start_time", columnDefinition = "TIMESTAMP")
     private Timestamp startTime;
-    @NonNull
+//    @NonNull
     @Column(name = "end_time", columnDefinition = "TIMESTAMP")
     private Timestamp endTime;
-    @NonNull
+//    @NonNull
     @JoinColumn(name = "start_location", referencedColumnName = "gpsId")
     @OneToOne
     private GPS startLocation;
-    @NonNull
+//    @NonNull
     @JoinColumn(name = "end_location", referencedColumnName = "gpsId")
     @OneToOne
     private GPS endLocation;
-    @NonNull
+//    @NonNull
     private Integer duration;
-    @NonNull
+//    @NonNull
     private Integer distance;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "telemetry_id")
+    private Telemetry telemetry;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     @NonNull
     public UUID getTripId() {
@@ -148,5 +155,21 @@ public class Trip {
 
     public void setDistance(@NonNull Integer distance) {
         this.distance = distance;
+    }
+
+    public Telemetry getTelemetry() {
+        return telemetry;
+    }
+
+    public void setTelemetry(Telemetry telemetry) {
+        this.telemetry = telemetry;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

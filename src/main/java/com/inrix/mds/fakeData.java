@@ -9,6 +9,7 @@ import com.inrix.mds.repository.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,8 +32,38 @@ public class fakeData {
         this.gpsRepository = GPSRepository;
     }
 
-//    @PostConstruct
-//    public void seedData() {
+    @PostConstruct
+    @Transactional
+    public void seedData() {
+
+        Event event = new Event();
+//        UUID u = UUID.randomUUID();
+//        event.setEventId(u);
+        event.setDeviceId(UUID.randomUUID());
+        event.setProviderId(UUID.randomUUID());
+        event.setDataProviderId(UUID.randomUUID());
+        event.setVehicleState(VehicleState.reserved);
+        List<EventType> eventTypes = new ArrayList<>();
+        eventTypes.add(EventType.maintenance);
+        eventTypes.add(EventType.trip_start);
+        event.setEventTypes(eventTypes);
+        event.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        event.setBatteryPercent(77);
+
+        Trip t = new Trip();
+        t.setDuration(2222);
+//        t.setTripId(UUID.randomUUID());
+        t.setEvent(event);
+
+        List<Trip> aa = new ArrayList<>();
+        aa.add(t);
+        event.setTripIds(aa);
+        tripRepository.save(t);
+
+//        event.setTripIds(aa);
+        eventRepository.save(event);
+
+    }
 //        Event event = new Event();
 //        event.setEventId(UUID.randomUUID());
 //        event.setDeviceId(UUID.randomUUID());

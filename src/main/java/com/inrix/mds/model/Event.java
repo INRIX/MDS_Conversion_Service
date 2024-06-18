@@ -16,16 +16,17 @@ import java.util.UUID;
 public class Event {
     @Id
     @NonNull
-    @Column(name = "event_id", columnDefinition = "VARCHAR(36)")  // USE uuid for POSTGRES
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "event_id")
     private UUID eventId;
     @NonNull
-    @Column(name = "device_id", columnDefinition = "VARCHAR(36)") // USE uuid for POSTGRES
+    @Column(name = "device_id")
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id", columnDefinition = "BINARY(16)") // USE uuid for POSTGRES
+    @Column(name = "provider_id")
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
+    @Column(name = "data_provider_id")
     private UUID dataProviderId;
     @NonNull
     @Column(name = "vehicle_state")
@@ -42,7 +43,12 @@ public class Event {
     private Integer batteryPercent;
     @Column(name = "trip_ids")
     @Convert(converter = TripIdsConverter.class)
-    private List<UUID> tripIds;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "event")
+    private List<Trip> tripIds;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
 
     @PrePersist
     @PreUpdate
@@ -130,12 +136,20 @@ public class Event {
         this.batteryPercent = batteryPercent;
     }
 
-    public List<UUID> getTripIds() {
+    public List<Trip> getTripIds() {
         return tripIds;
     }
 
-    public void setTripIds(List<UUID> tripIds) {
+    public void setTripIds(List<Trip> tripIds) {
         this.tripIds = tripIds;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
 }

@@ -13,24 +13,26 @@ import java.util.UUID;
 public class Telemetry {
     @Id
     @NonNull
-    @Column(name = "telemetry_id", columnDefinition = "BINARY(16)")
+    @Column(name = "telemetry_id")
     private UUID telemetryId;
     @NonNull
-    @Column(name = "device_id", columnDefinition = "BINARY(16)")
+    @Column(name = "device_id")
     private UUID deviceId;
     @NonNull
-    @Column(name = "provider_id", columnDefinition = "BINARY(16)")
+    @Column(name = "provider_id")
     private UUID providerId;
     @Nullable
-    @Column(name = "data_provider_id", columnDefinition = "BINARY(16)")
+    @Column(name = "data_provider_id")
     private UUID dataProviderId;
     @NonNull
     @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
     private Timestamp timestamp;
     @NonNull
     @Column(name = "trip_ids")
+    @OneToMany
     @Convert(converter = TripIdsConverter.class)
-    private List<UUID> tripIds;
+    @JoinColumn(name = "trip_id")
+    private List<Trip> tripIds;
     @NonNull
     @Column(name = "journey_id")
     private UUID journeyId;
@@ -88,11 +90,11 @@ public class Telemetry {
     }
 
     @NonNull
-    public List<UUID> getTripIds() {
+    public List<Trip> getTripIds() {
         return tripIds;
     }
 
-    public void setTripIds(@NonNull List<UUID> tripIds) {
+    public void setTripIds(@NonNull List<Trip> tripIds) {
         this.tripIds = tripIds;
     }
 
