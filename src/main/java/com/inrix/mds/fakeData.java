@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class fakeData {
         eventTypes.add(EventType.maintenance);
         eventTypes.add(EventType.trip_start);
         event.setEventTypes(eventTypes);
-        event.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        event.setTimestamp(1715500726423L);
         event.setBatteryPercent(77);
 
         Trip t = new Trip();
@@ -60,6 +61,7 @@ public class fakeData {
         event.setTripIds(aa);
         eventRepository.save(event);
         tripRepository.save(t);
+
 
 //        event.setTripIds(aa);
 
