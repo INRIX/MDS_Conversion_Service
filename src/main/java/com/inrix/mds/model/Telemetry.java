@@ -25,8 +25,8 @@ public class Telemetry {
     @Column(name = "data_provider_id")
     private UUID dataProviderId;
     @NonNull
-    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
-    private Timestamp timestamp;
+    @Column(name = "timestamp")
+    private long timestamp;
 //    @NonNull
     @Column(name = "trip_ids")
     @Convert(converter = TripIdsConverter.class)
@@ -80,11 +80,11 @@ public class Telemetry {
     }
 
     @NonNull
-    public Timestamp getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(@NonNull Timestamp timestamp) {
+    public void setTimestamp(@NonNull long timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -1,5 +1,7 @@
 package com.inrix.mds.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.inrix.mds.model.converter.EventTypeConverter;
 import com.inrix.mds.model.converter.TripIdsConverter;
 import com.inrix.mds.model.enums.EventType;
@@ -36,14 +38,15 @@ public class Event {
     @Convert(converter = EventTypeConverter.class)
     private List<EventType> eventTypes;
     @NonNull
-    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
-    private Timestamp timestamp;
+    @Column(name = "timestamp")
+    private long timestamp;
     @NonNull
     @Column(name = "battery_percent")
     private Integer batteryPercent;
     @Column(name = "trip_ids")
+    @JsonManagedReference
     @Convert(converter = TripIdsConverter.class)
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "event")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "event")
     private List<Trip> tripIds;
 
     @ManyToOne
@@ -119,11 +122,11 @@ public class Event {
     }
 
     @NonNull
-    public Timestamp getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(@NonNull Timestamp timestamp) {
+    public void setTimestamp(@NonNull long timestamp) {
         this.timestamp = timestamp;
     }
 

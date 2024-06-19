@@ -1,5 +1,7 @@
 package com.inrix.mds.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -34,11 +36,11 @@ public class Trip {
     @Column(name = "journey_id")
     private UUID journeyId;
 //    @NonNull
-    @Column(name = "start_time", columnDefinition = "TIMESTAMP")
-    private Timestamp startTime;
+    @Column(name = "start_time")
+    private long startTime;
 //    @NonNull
-    @Column(name = "end_time", columnDefinition = "TIMESTAMP")
-    private Timestamp endTime;
+    @Column(name = "end_time")
+    private long endTime;
 //    @NonNull
     @JoinColumn(name = "start_location", referencedColumnName = "gpsId")
     @OneToOne
@@ -54,8 +56,9 @@ public class Trip {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "telemetry_id")
     private Telemetry telemetry;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonBackReference // <- Indicates Jackson to ignore this side of the relationship
     private Event event;
 
     @NonNull
@@ -104,20 +107,20 @@ public class Trip {
     }
 
     @NonNull
-    public Timestamp getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(@NonNull Timestamp startTime) {
+    public void setStartTime(@NonNull long startTime) {
         this.startTime = startTime;
     }
 
     @NonNull
-    public Timestamp getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(@NonNull Timestamp endTime) {
+    public void setEndTime(@NonNull long endTime) {
         this.endTime = endTime;
     }
 
