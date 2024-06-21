@@ -1,20 +1,33 @@
 package com.inrix.mds.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inrix.mds.constants.MDSConstants;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.inrix.mds.exception.ParamErrors;
+import com.inrix.mds.service.VehicleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping(value = MDSConstants.LIVE_API_VERSION + "/vehicles")
 public class VehicleController {
+
+    @Autowired
+    VehicleService vehicleService;
+
     @GetMapping()
-    public void Vehicle (@RequestParam(required = false) UUID deviceId){}
+    public String Vehicle (@PathVariable(required = false) UUID deviceId) throws JsonProcessingException {
+        if (vehicleService.getVehicle(deviceId) == ""){
+            throw new ParamErrors("Something went wrong....");
+        }
+        if (deviceId == null){
+            deviceId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        }
+        return vehicleService.getVehicle(deviceId);
+    }
 
     @GetMapping(value = "/status")
-    public void vehicleStatus (@RequestParam(required = false) UUID deviceId){}
+    public void vehicleStatus (@PathVariable(required = false) UUID deviceId){}
 
 }

@@ -28,7 +28,7 @@ public class Vehicle {
     private VehicleType vehicleType;
     @NonNull
     @Column(name = "propulsion_type")
-    @Convert(converter = PropulsionTypeConverter.class)
+//    @Convert(converter = PropulsionTypeConverter.class)
     private List<PropulsionType> propulsionType;
     @NonNull
     @Column(name = "battery_capacity")
