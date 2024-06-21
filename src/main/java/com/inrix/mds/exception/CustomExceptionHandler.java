@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(ParamErrors.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleParamErrors(ParamErrors msg) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
     }
