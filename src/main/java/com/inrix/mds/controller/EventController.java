@@ -5,6 +5,8 @@ import com.inrix.mds.constants.MDSConstants;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.repository.EventRepo;
+import com.inrix.mds.service.EventService;
+import com.inrix.mds.service.UniversalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,39 +30,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping(value =  MDSConstants.LIVE_API_VERSION + "/events")
 public class EventController {
     @Autowired
-    private EventRepo eventRepo;
+    UniversalService universalService;
+    @Autowired
+    EventService eventService;
 
     @GetMapping("/historical")
-    public String eventHistory(@RequestParam("event_time") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime dateTime) throws JsonProcessingException {
-        if (dateTime == null){
+    public String eventHistory(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
+        if (val == null){
             throw new ParamErrors("event_time cannot be null.");
         }
-
-        List<Event> events = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Instant utcConversion = dateTime.toInstant(ZoneOffset.UTC);
-        Instant Hour = utcConversion.plus(1, ChronoUnit.HOURS);
-
-        if (Hour.isAfter(Instant.now())) {
-            throw new ParamErrors("Time must be at least a hour before present.");
-        }
-
-
-        for (Event e: eventRepo.findAll()){
-            Instant eventTimestamp = Instant.ofEpochMilli(e.getTimestamp());
-            if (eventTimestamp.equals(utcConversion) || eventTimestamp.isAfter(utcConversion)
-                    && eventTimestamp.isBefore(Hour) || eventTimestamp.equals(Hour)){
-                events.add(e);
-            }
-        }
-        Map<String, Object> json = new HashMap<>();
-        json.put("version", MDSConstants.LIVE_API_VERSION);
-        json.put("events", events);
-        String jsonConversion = objectMapper.writeValueAsString(json);
-
-        return jsonConversion;
+        return universalService.timeFilter(val, "Event");
     }
 
+    @GetMapping("/recent")
+    public String eventRecent(@RequestParam(value = "start_time", required = false) Long start, @RequestParam(value = "end_time", required = false) Long end) throws JsonProcessingException {
+        return eventService.getRecent(start, end);
+    }
 
 
 }
