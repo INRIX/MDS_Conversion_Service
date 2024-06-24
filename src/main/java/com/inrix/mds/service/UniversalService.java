@@ -17,10 +17,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @Service
 public class UniversalService {
 
@@ -41,7 +39,7 @@ public class UniversalService {
             throw new ParamErrors("Time must be at least a hour before present.");
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> json = new HashMap<>();
+        LinkedHashMap<String, Object> json = new LinkedHashMap<>();
         json.put("version", MDSConstants.LIVE_API_VERSION);
 
         if (controller == "Event") {
