@@ -41,15 +41,34 @@ class MdsApplicationTests {
 				.jsonPath("$.events").isArray();
 	}
 
+//	@Test
+//	void VehicleTestEmpty(){
+//		webTestClient.get().uri(MDSConstants.LIVE_API_VERSION + "/vehicles")
+//				.exchange()
+//				.expectStatus().isOk()
+//				.expectBody()
+//				.jsonPath("$.version").isEqualTo(MDSConstants.LIVE_API_VERSION)
+//				.jsonPath("$.vehicle").isArray();
+//	}
+
 	@Test
-	void VehicleTestEmpty(){
-		webTestClient.get().uri(MDSConstants.LIVE_API_VERSION + "/vehicles")
+	void TripTest(){
+		webTestClient.get().uri(MDSConstants.LIVE_API_VERSION + "/trips?end_time={end_time}", "2024-05-12T07:58:46.423")
 				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.version").isEqualTo(MDSConstants.LIVE_API_VERSION)
-				.jsonPath("$.vehicle").isArray();
+				.jsonPath("$.trips").isArray();
 	}
 
 
+	@Test
+	void TelemetryTest(){
+		webTestClient.get().uri(MDSConstants.LIVE_API_VERSION + "/telemetry?event_time={event_time}", "2024-05-12T07:58:46.423")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.jsonPath("$.version").isEqualTo(MDSConstants.LIVE_API_VERSION)
+				.jsonPath("$.telemetry").isArray();
+	}
 }
