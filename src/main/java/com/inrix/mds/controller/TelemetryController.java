@@ -3,6 +3,7 @@ package com.inrix.mds.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inrix.mds.constants.MDSConstants;
+import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Telemetry;
 import com.inrix.mds.model.Trip;
@@ -37,6 +38,6 @@ public class TelemetryController {
         if (val == null){
             throw new ParamErrors("event_time cannot be null.");
         }
-        return universalService.timeFilter(val, "Telemetry");
+        return universalService.timeFilter(val, MDSType.TELEMETRY);
     }
 }

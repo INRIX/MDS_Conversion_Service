@@ -2,6 +2,7 @@ package com.inrix.mds.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inrix.mds.constants.MDSConstants;
+import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.repository.EventRepo;
@@ -39,7 +40,7 @@ public class EventController {
         if (val == null){
             throw new ParamErrors("event_time cannot be null.");
         }
-        return universalService.timeFilter(val, "Event");
+        return universalService.timeFilter(val, MDSType.EVENT);
     }
 
     @GetMapping("/recent")

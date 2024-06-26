@@ -3,6 +3,7 @@ package com.inrix.mds.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inrix.mds.constants.MDSConstants;
+import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.model.Trip;
@@ -35,6 +36,6 @@ public class TripController {
         if (val == null){
             throw new ParamErrors("end_time cannot be null.");
         }
-        return universalService.timeFilter(val, "Trip");
+        return universalService.timeFilter(val, MDSType.TRIP);
     }
 }
