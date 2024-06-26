@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -21,11 +23,19 @@ public class VehicleService {
     @Autowired
     VehicleRepo vehicleRepo;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     public String getVehicle(UUID val) throws JsonProcessingException {
         Map<String, Object> json = new HashMap<>();
         json.put("version", MDSConstants.LIVE_API_VERSION);
-        ObjectMapper objectMapper = new ObjectMapper();
+        List<Vehicle> ve = new ArrayList<>();
         if (Objects.equals(val.toString(), "00000000-0000-0000-0000-000000000000")){
+            for (Vehicle v: vehicleRepo.findAll()){
+                if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(14)).toEpochMilli())){
+                    ve.add(v);
+                }
+            }
             json.put("vehicle",vehicleRepo.findRecentVehicles());
             return objectMapper.writeValueAsString(json);
         }
@@ -42,7 +52,6 @@ public class VehicleService {
     public String getVehicleStatus(UUID val) throws JsonProcessingException {
         Map<String, Object> json = new HashMap<>();
         json.put("version", MDSConstants.LIVE_API_VERSION);
-        ObjectMapper objectMapper = new ObjectMapper();
         List<VehicleState> states = new ArrayList<>();
 
         for (Vehicle v: vehicleRepo.findAll()){
