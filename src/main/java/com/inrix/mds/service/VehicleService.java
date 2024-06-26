@@ -6,10 +6,9 @@ import com.inrix.mds.constants.MDSConstants;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.model.Vehicle;
 import com.inrix.mds.model.enums.VehicleState;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.VehicleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -23,50 +22,47 @@ public class VehicleService {
     @Autowired
     VehicleRepo vehicleRepo;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    public String getVehicle(UUID val) throws JsonProcessingException {
-        Map<String, Object> json = new HashMap<>();
-        json.put("version", MDSConstants.LIVE_API_VERSION);
-        List<Vehicle> ve = new ArrayList<>();
-        if (Objects.equals(val.toString(), "00000000-0000-0000-0000-000000000000")){
-            for (Vehicle v: vehicleRepo.findAll()){
-                if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(14)).toEpochMilli())){
-                    ve.add(v);
-                }
+    public ResponseWrapper getVehicle(){
+        List<Vehicle> vehicle = new ArrayList<>();
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        for (Vehicle v: vehicleRepo.findAll()){
+            if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(30)).toEpochMilli())){
+                vehicle.add(v);
             }
-            json.put("vehicle",vehicleRepo.findRecentVehicles());
-            return objectMapper.writeValueAsString(json);
         }
+            responseWrapper.setData("vehicle: " + vehicle);
+            return responseWrapper;
+    }
+
+    public ResponseWrapper getVehicle(UUID val){
+        List<Vehicle> vehicle = new ArrayList<>();
+        ResponseWrapper responseWrapper = new ResponseWrapper();
 
         for (Vehicle v: vehicleRepo.findAll()){
             if (val == v.getDeviceId()){
-                json.put("vehicle", v);
-                return objectMapper.writeValueAsString(json);
+                vehicle.add(v);
             }
         }
-        return "Error";
+        responseWrapper.setData(vehicle);
+        return responseWrapper;
     }
 
-    public String getVehicleStatus(UUID val) throws JsonProcessingException {
-        Map<String, Object> json = new HashMap<>();
-        json.put("version", MDSConstants.LIVE_API_VERSION);
-        List<VehicleState> states = new ArrayList<>();
-
-        for (Vehicle v: vehicleRepo.findAll()){
-            for (Event e: v.getEvents()){
-                if (val == v.getDeviceId()) {
-                    states.add(e.getVehicleState());
-
-                }
-            }
-
-        }
-        json.put("vehicle_status", states);
-        return objectMapper.writeValueAsString(json);
-    }
-
-
+//    public String getVehicleStatus(UUID val) throws JsonProcessingException {
+//        Map<String, Object> json = new HashMap<>();
+//        json.put("version", MDSConstants.LIVE_API_VERSION);
+//        List<VehicleState> states = new ArrayList<>();
+//
+//        for (Vehicle v: vehicleRepo.findAll()){
+//            for (Event e: v.getEvents()){
+//                if (val == v.getDeviceId()) {
+//                    states.add(e.getVehicleState());
+//
+//                }
+//            }
+//
+//        }
+//        json.put("vehicle_status", states);
+//        return objectMapper.writeValueAsString(json);
+//    }
 
 }

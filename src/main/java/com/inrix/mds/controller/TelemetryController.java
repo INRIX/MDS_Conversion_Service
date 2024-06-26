@@ -7,6 +7,7 @@ import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Telemetry;
 import com.inrix.mds.model.Trip;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TelemetryRepo;
 import com.inrix.mds.service.UniversalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,7 @@ public class TelemetryController {
     UniversalService universalService;
 
     @GetMapping
-    public String telemetry(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
-        if (val == null){
-            throw new ParamErrors("event_time cannot be null.");
-        }
+    public ResponseWrapper telemetry(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.TELEMETRY);
     }
 }

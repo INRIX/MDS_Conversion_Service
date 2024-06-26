@@ -5,6 +5,7 @@ import com.inrix.mds.constants.MDSConstants;
 import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.EventRepo;
 import com.inrix.mds.service.EventService;
 import com.inrix.mds.service.UniversalService;
@@ -36,15 +37,12 @@ public class EventController {
     EventService eventService;
 
     @GetMapping("/historical")
-    public String eventHistory(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
-        if (val == null){
-            throw new ParamErrors("event_time cannot be null.");
-        }
+    public ResponseWrapper eventHistory(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
         return universalService.timeFilter(val, MDSType.EVENT);
     }
 
     @GetMapping("/recent")
-    public String eventRecent(@RequestParam(value = "start_time", required = false) Long start, @RequestParam(value = "end_time", required = false) Long end) throws JsonProcessingException {
+    public ResponseWrapper eventRecent(@RequestParam(value = "start_time", required = false) Long start, @RequestParam(value = "end_time", required = false) Long end) throws JsonProcessingException {
         return eventService.getRecent(start, end);
     }
 

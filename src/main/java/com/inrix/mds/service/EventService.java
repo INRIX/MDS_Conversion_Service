@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inrix.mds.constants.MDSConstants;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.EventRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,8 @@ import java.util.Map;
 public class EventService {
     @Autowired
     EventRepo eventRepo;
-    public String getRecent(Long start, Long end) throws JsonProcessingException {
+    public ResponseWrapper getRecent(Long start, Long end) {
         List<Event> events = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         if (start == null){
             throw new ParamErrors("start_time cannot be null.");
@@ -29,7 +29,7 @@ public class EventService {
         if (end == null){
             throw new ParamErrors("end_time cannot be null.");
         }
-
+        ResponseWrapper responseWrapper = new ResponseWrapper();
         long currentTime = System.currentTimeMillis();
         long twoWeeks = currentTime - ChronoUnit.WEEKS.getDuration().toMillis() * 2;
         if (start < twoWeeks || end < twoWeeks){
@@ -40,10 +40,8 @@ public class EventService {
                 events.add(e);
             }
         }
-        Map<String, Object> json = new HashMap<>();
-        json.put("version", MDSConstants.LIVE_API_VERSION);
-        json.put("events", events);
+        responseWrapper.setData(events);
 
-        return objectMapper.writeValueAsString(json);
+        return responseWrapper;
     }
 }

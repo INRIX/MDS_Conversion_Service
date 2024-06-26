@@ -8,6 +8,7 @@ import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.model.Telemetry;
 import com.inrix.mds.model.Trip;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.EventRepo;
 import com.inrix.mds.repository.TelemetryRepo;
 import com.inrix.mds.repository.TripRepo;
@@ -32,11 +33,13 @@ public class UniversalService {
     @Autowired
     TripRepo tripRepo;
 
-    @Autowired
-    ObjectMapper getObjectMapper;
+
+    public String timeFilter(MDSType mdsType) {
+        throw new ParamErrors("time cannot be null.");
+    }
 
 
-    public String timeFilter(LocalDateTime val, MDSType mdsType) throws JsonProcessingException {
+    public ResponseWrapper timeFilter(LocalDateTime val, MDSType mdsType) {
 
         Instant current = val.toInstant(ZoneOffset.UTC);
         Instant Hour = current.plus(1, ChronoUnit.HOURS);
@@ -44,40 +47,47 @@ public class UniversalService {
         if (Hour.isAfter(Instant.now())) {
             throw new ParamErrors("Time must be at least a hour before present.");
         }
-        ObjectMapper objectMapper = new ObjectMapper();
-        LinkedHashMap<String, Object> json = new LinkedHashMap<>();
-        json.put("version", MDSConstants.LIVE_API_VERSION);
-        switch (mdsType){
-            case EVENT: List<Event> events = new ArrayList<>();
-            for (Event e : eventRepo.findAll()) {
-                Instant eventTimestamp = Instant.ofEpochMilli(e.getTimestamp());
-                if (eventTimestamp.equals(current) || eventTimestamp.isAfter(current)
-                        && eventTimestamp.isBefore(Hour) || eventTimestamp.equals(Hour)) {
-                    events.add(e);
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        switch (mdsType) {
+            case EVENT:
+
+                List<Event> events = new ArrayList<>();
+                for (Event e : eventRepo.findAll()) {
+                    Instant eventTimestamp = Instant.ofEpochMilli(e.getTimestamp());
+                    if (eventTimestamp.equals(current) || eventTimestamp.isAfter(current)
+                            && eventTimestamp.isBefore(Hour) || eventTimestamp.equals(Hour)) {
+                        events.add(e);
+                    }
                 }
-            }
-            json.put("events", events);
-            case TRIP: List<Trip> trips = new ArrayList<>();
-                for (Trip t: tripRepo.findAll()){
+                System.out.println(events);
+                responseWrapper.setData(events);
+                System.out.println("SLSLSLSLS");
+                break;
+            case TRIP:
+                List<Trip> trips = new ArrayList<>();
+                for (Trip t : tripRepo.findAll()) {
                     Instant tripTimestamp = Instant.ofEpochMilli(t.getEndTime());
                     if (tripTimestamp.equals(current) || tripTimestamp.isAfter(current)
-                            && tripTimestamp.isBefore(Hour) || tripTimestamp.equals(Hour)){
+                            && tripTimestamp.isBefore(Hour) || tripTimestamp.equals(Hour)) {
                         trips.add(t);
                     }
                 }
-                json.put("trips", trips);
-            case TELEMETRY: List<Telemetry> telemetry = new ArrayList<>();
-                for (Telemetry t: telemetryRepo.findAll()){
+                responseWrapper.setData(trips);
+                break;
+            case TELEMETRY:
+                List<Telemetry> telemetry = new ArrayList<>();
+                for (Telemetry t : telemetryRepo.findAll()) {
                     Instant telemetryTimestamp = Instant.ofEpochMilli(t.getTimestamp());
                     if (telemetryTimestamp.equals(current) || telemetryTimestamp.isAfter(current)
-                            && telemetryTimestamp.isBefore(Hour) || telemetryTimestamp.equals(Hour)){
+                            && telemetryTimestamp.isBefore(Hour) || telemetryTimestamp.equals(Hour)) {
                         telemetry.add(t);
                     }
                 }
-                json.put("telemetry", telemetry);
+                responseWrapper.setData(telemetry);
+                break;
         }
 
-        return objectMapper.writeValueAsString(json);
+        return responseWrapper;
     }
 
 

@@ -1,6 +1,7 @@
 package com.inrix.mds.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.inrix.mds.model.converter.EventTypeConverter;
 import com.inrix.mds.model.converter.TripIdsConverter;

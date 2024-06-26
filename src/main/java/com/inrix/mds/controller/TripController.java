@@ -7,6 +7,7 @@ import com.inrix.mds.constants.MDSType;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Event;
 import com.inrix.mds.model.Trip;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TripRepo;
 import com.inrix.mds.service.UniversalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,7 @@ public class TripController {
     @Autowired
     UniversalService universalService;
     @GetMapping
-    public String trips(@RequestParam(value = "end_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
-        if (val == null){
-            throw new ParamErrors("end_time cannot be null.");
-        }
+    public ResponseWrapper trips(@RequestParam(value = "end_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.TRIP);
     }
 }

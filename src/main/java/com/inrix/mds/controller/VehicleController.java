@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inrix.mds.constants.MDSConstants;
 import com.inrix.mds.exception.ParamErrors;
 import com.inrix.mds.model.Vehicle;
+import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.VehicleRepo;
 import com.inrix.mds.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +20,11 @@ public class VehicleController {
     VehicleService vehicleService;
 
     @GetMapping()
-    public String Vehicle (@PathVariable(required = false) UUID deviceId) throws JsonProcessingException {
-        if (deviceId == null){
-            deviceId = UUID.fromString("00000000-0000-0000-0000-000000000000");
-        }
-        if (vehicleService.getVehicle(deviceId) == "Error"){
-            throw new ParamErrors("Something went wrong....");
-        }
+    public ResponseWrapper Vehicle (@PathVariable(required = false) UUID deviceId) {
         return vehicleService.getVehicle(deviceId);
     }
 
+    // TODO: Implement Method
     @GetMapping(value = "/status")
     public void vehicleStatus (@PathVariable(required = false) UUID deviceId){
 
