@@ -10,6 +10,7 @@ import com.inrix.mds.model.Trip;
 import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TripRepo;
 import com.inrix.mds.service.UniversalService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = MDSConstants.LIVE_API_VERSION + "/trips")
+@Tag(name = "Trip", description = "Retrieves trip data based on a certain date.")
 public class TripController {
 
     @Autowired

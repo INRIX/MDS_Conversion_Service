@@ -9,6 +9,9 @@ import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.EventRepo;
 import com.inrix.mds.service.EventService;
 import com.inrix.mds.service.UniversalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(value =  MDSConstants.LIVE_API_VERSION + "/events")
+@Tag(name = "Event", description = "Retrieves event data based on certain times.")
 public class EventController {
     @Autowired
     UniversalService universalService;
@@ -37,12 +41,14 @@ public class EventController {
     EventService eventService;
 
     @GetMapping("/historical")
-    public ResponseWrapper eventHistory(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) throws JsonProcessingException {
+    @Operation(description = "Returns a list of Event objects, describing the activity of the Provider's vehicles")
+    public ResponseWrapper eventHistory(@Parameter(description = "Format: yyyy-MM-dd'T'HH - e.g 2024-05-12T07:58:46.423", required = true) @RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.EVENT);
     }
 
     @GetMapping("/recent")
-    public ResponseWrapper eventRecent(@RequestParam(value = "start_time", required = false) Long start, @RequestParam(value = "end_time", required = false) Long end) throws JsonProcessingException {
+    @Operation(description = "Returns a list of Event objects, describing the activity of the Provider's vehicles. Recent events are at most two weeks old and can be queried with start/stop time.")
+    public ResponseWrapper eventRecent(@Parameter(description = "Format: EpochMilli - e.g 1719490684147", required = true) @RequestParam(value = "start_time", required = false) Long start, @Parameter(description = "Format: EpochMilli - e.g 1719490684147", required = true)  @RequestParam(value = "end_time", required = false) Long end) {
         return eventService.getRecent(start, end);
     }
 

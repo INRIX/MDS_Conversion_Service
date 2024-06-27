@@ -10,6 +10,7 @@ import com.inrix.mds.model.Trip;
 import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TelemetryRepo;
 import com.inrix.mds.service.UniversalService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = MDSConstants.LIVE_API_VERSION + "/telemetry")
+@Tag(name = "Telemetry", description = "Retrieves telemetry data based on a certain data.")
 public class TelemetryController {
 
     @Autowired
