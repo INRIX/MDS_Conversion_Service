@@ -31,7 +31,7 @@ public class VehicleController {
 
     @GetMapping(value = "/status")
     @Operation(description = " Return the current status of all vehicles on the system, however vehicles not in a PROW state (removed, missing, elsewhere) will only persist in the feed for 90 minutes before being removed. If a device Id is specified, the vehicle is returned along with its vehicle state.")
-    public ResponseWrapper vehicleStatus (@PathVariable(required = false) UUID deviceId){
+    public ResponseWrapper vehicleStatus (@Parameter(description = "Format: UUID - e.g 550e8400-e29b-41d4-a716-446655440000", required = false) @PathVariable(required = false) UUID deviceId){
         return vehicleService.getVehicleStatus(deviceId);
     }
 

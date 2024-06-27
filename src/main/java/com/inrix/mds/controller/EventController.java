@@ -41,7 +41,7 @@ public class EventController {
     EventService eventService;
 
     @GetMapping("/historical")
-    @Operation(description = "Returns a list of Event objects, describing the activity of the Provider's vehicles")
+    @Operation(description = "Returns a list of Event objects, describing the activity of the Provider's vehicles.")
     public ResponseWrapper eventHistory(@Parameter(description = "Format: yyyy-MM-dd'T'HH - e.g 2024-05-12T07:58:46.423", required = true) @RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.EVENT);
     }

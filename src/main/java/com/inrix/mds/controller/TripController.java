@@ -10,6 +10,8 @@ import com.inrix.mds.model.Trip;
 import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TripRepo;
 import com.inrix.mds.service.UniversalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,7 +37,8 @@ public class TripController {
     @Autowired
     UniversalService universalService;
     @GetMapping
-    public ResponseWrapper trips(@RequestParam(value = "end_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
+    @Operation(description = "Query historical trip data.")
+    public ResponseWrapper trips(@Parameter(description = "Format: yyyy-MM-dd'T'HH - e.g 2024-05-12T07:58:46.423", required = true) @RequestParam(value = "end_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.TRIP);
     }
 }

@@ -10,6 +10,8 @@ import com.inrix.mds.model.Trip;
 import com.inrix.mds.model.response.ResponseWrapper;
 import com.inrix.mds.repository.TelemetryRepo;
 import com.inrix.mds.service.UniversalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,7 +39,8 @@ public class TelemetryController {
     UniversalService universalService;
 
     @GetMapping
-    public ResponseWrapper telemetry(@RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
+    @Operation(description = "Feed of vehicle telemetry data within a hour.")
+    public ResponseWrapper telemetry(@Parameter(description = "Format: yyyy-MM-dd'T'HH - e.g 2024-05-12T07:58:46.423", required = true) @RequestParam(value = "event_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") LocalDateTime val) {
         return universalService.timeFilter(val, MDSType.TELEMETRY);
     }
 }
