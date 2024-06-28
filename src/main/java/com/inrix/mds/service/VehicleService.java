@@ -39,45 +39,55 @@ public class VehicleService {
     }
 
     public ResponseWrapper getVehicle(UUID val) {
-        List<Vehicle> vehicle = new ArrayList<>();
+//        List<Vehicle> vehicle = new ArrayList<>();
         ResponseWrapper responseWrapper = new ResponseWrapper();
-
-        for (Vehicle v : vehicleRepo.findAll()) {
-            if (val == v.getDeviceId()) {
-                vehicle.add(v);
-            }
-        }
-        responseWrapper.setData(vehicle);
+//
+//        for (Vehicle v : vehicleRepo.findAll()) {
+//            if (val == v.getDeviceId()) {
+//                vehicle.add(v);
+//            }
+//        }
+        responseWrapper.setData(vehicleRepo.findVehicleByDeviceId(val));
         return responseWrapper;
     }
 
     public ResponseWrapper getVehicleStatus(UUID val) {
-        List<Vehicle> vehicles = new ArrayList<>();
+        List<VehicleState> targetStates = Arrays.asList(
+                VehicleState.reserved,
+                VehicleState.on_trip,
+                VehicleState.stopped,
+                VehicleState.available,
+                VehicleState.non_operational,
+                VehicleState.non_contactable
+        );
+//        List<Vehicle> vehicles = new ArrayList<>();
         ResponseWrapper responseWrapper = new ResponseWrapper();
         if (val == null) {
-            for (Vehicle vehicle : vehicleRepo.findAll()) {
-                if ((vehicle.getEvents().getLast().getTimestamp() >= Instant.now().minus(Duration.ofMinutes(90)).toEpochMilli())
-                        && (vehicle.getEvents().getLast().getVehicleState() == VehicleState.elsewhere ||
-                        vehicle.getEvents().getLast().getVehicleState() == VehicleState.removed)) {
-                    vehicles.add(vehicle);
-                    continue;
-                }
-                for (Event event : eventRepo.findAll()) {
-                    if (event.getVehicleState() == VehicleState.reserved ||
-                            event.getVehicleState() == VehicleState.on_trip ||
-                            event.getVehicleState() == VehicleState.stopped ||
-                            event.getVehicleState() == VehicleState.available ||
-                            event.getVehicleState() == VehicleState.non_operational ||
-                            event.getVehicleState() == VehicleState.non_contactable) {
-                        vehicles.add(vehicle);
-                        break;
-                    }
-                }
-            }
-        } else {
-            vehicles.add(vehicleRepo.findVehicleByDeviceId(val));
+            long ninetyMinutesAgo = Instant.now().minus(Duration.ofMinutes(90)).toEpochMilli();
+            responseWrapper.setData(vehicleRepo.findDistinctVehicles(ninetyMinutesAgo, VehicleState.elsewhere, VehicleState.removed, targetStates));
+            return responseWrapper;
+//            for (Vehicle vehicle : vehicleRepo.findAll()) {
+//                if ((vehicle.getEvents().getLast().getTimestamp() >= Instant.now().minus(Duration.ofMinutes(90)).toEpochMilli())
+//                        && (vehicle.getEvents().getLast().getVehicleState() == VehicleState.elsewhere ||
+//                        vehicle.getEvents().getLast().getVehicleState() == VehicleState.removed)) {
+//                    vehicles.add(vehicle);
+//                    continue;
+//                }
+//                for (Event event : eventRepo.findAll()) {
+//                    if (event.getVehicleState() == VehicleState.reserved ||
+//                            event.getVehicleState() == VehicleState.on_trip ||
+//                            event.getVehicleState() == VehicleState.stopped ||
+//                            event.getVehicleState() == VehicleState.available ||
+//                            event.getVehicleState() == VehicleState.non_operational ||
+//                            event.getVehicleState() == VehicleState.non_contactable) {
+//                        vehicles.add(vehicle);
+//                        break;
+//                    }
+//                }
+//            }
         }
-        responseWrapper.setData(vehicles);
+        responseWrapper.setData(vehicleRepo.findVehicleByDeviceId(val));
+//        responseWrapper.setData(vehicles);
         return responseWrapper;
     }
 

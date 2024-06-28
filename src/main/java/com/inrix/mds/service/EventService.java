@@ -21,7 +21,7 @@ public class EventService {
     @Autowired
     EventRepo eventRepo;
     public ResponseWrapper getRecent(Long start, Long end) {
-        List<Event> events = new ArrayList<>();
+//        List<Event> events = new ArrayList<>();
 
         if (start == null){
             throw new ParamErrors("start_time cannot be null.");
@@ -35,12 +35,12 @@ public class EventService {
         if (start < twoWeeks || end < twoWeeks){
             throw new ParamErrors("Value is greater than 2 weeks before the time of the request.");
         }
-        for (Event e: eventRepo.findAll()){
-            if (e.getTimestamp()>= start && e.getTimestamp() < end){
-                events.add(e);
-            }
-        }
-        responseWrapper.setData(events);
+//        for (Event e: eventRepo.findAll()){
+//            if (e.getTimestamp()>= start && e.getTimestamp() < end){
+//                events.add(e);
+//            }
+//        }
+        responseWrapper.setData(eventRepo.findByTimestampGreaterThanEqualAndTimestampLessThan(start,end));
 
         return responseWrapper;
     }

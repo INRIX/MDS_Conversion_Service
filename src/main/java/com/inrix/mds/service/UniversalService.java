@@ -41,49 +41,50 @@ public class UniversalService {
 
     public ResponseWrapper timeFilter(LocalDateTime val, MDSType mdsType) {
 
-        Instant current = val.toInstant(ZoneOffset.UTC);
-        Instant Hour = current.plus(1, ChronoUnit.HOURS);
+        long current = val.toInstant(ZoneOffset.UTC).toEpochMilli();
+        Instant currentInstant = Instant.ofEpochMilli(current);
 
-        if (Hour.isAfter(Instant.now())) {
+        Instant hourLaterInstant = currentInstant.plus(1, ChronoUnit.HOURS);
+        long Hour = hourLaterInstant.toEpochMilli();
+
+
+        if (hourLaterInstant.isAfter(Instant.now())) {
             throw new ParamErrors("Time must be at least a hour before present.");
         }
         ResponseWrapper responseWrapper = new ResponseWrapper();
         switch (mdsType) {
             case EVENT:
-
-                List<Event> events = new ArrayList<>();
-                for (Event e : eventRepo.findAll()) {
-                    Instant eventTimestamp = Instant.ofEpochMilli(e.getTimestamp());
-                    if (eventTimestamp.equals(current) || eventTimestamp.isAfter(current)
-                            && eventTimestamp.isBefore(Hour) || eventTimestamp.equals(Hour)) {
-                        events.add(e);
-                    }
-                }
-                System.out.println(events);
-                responseWrapper.setData(events);
-                System.out.println("SLSLSLSLS");
+//                List<Event> events = new ArrayList<>();
+//                for (Event e : eventRepo.findAll()) {
+//                    Instant eventTimestamp = Instant.ofEpochMilli(e.getTimestamp());
+//                    if (eventTimestamp.equals(current) || eventTimestamp.isAfter(current)
+//                            && eventTimestamp.isBefore(Hour) || eventTimestamp.equals(Hour)) {
+//                        events.add(e);
+//                    }
+//                }
+                responseWrapper.setData(eventRepo.findByTimestampGreaterThanEqualAndTimestampLessThanEqual(current,Hour));
                 break;
             case TRIP:
-                List<Trip> trips = new ArrayList<>();
-                for (Trip t : tripRepo.findAll()) {
-                    Instant tripTimestamp = Instant.ofEpochMilli(t.getEndTime());
-                    if (tripTimestamp.equals(current) || tripTimestamp.isAfter(current)
-                            && tripTimestamp.isBefore(Hour) || tripTimestamp.equals(Hour)) {
-                        trips.add(t);
-                    }
-                }
-                responseWrapper.setData(trips);
+//                List<Trip> trips = new ArrayList<>();
+//                for (Trip t : tripRepo.findAll()) {
+//                    Instant tripTimestamp = Instant.ofEpochMilli(t.getEndTime());
+//                    if (tripTimestamp.equals(current) || tripTimestamp.isAfter(current)
+//                            && tripTimestamp.isBefore(Hour) || tripTimestamp.equals(Hour)) {
+//                        trips.add(t);
+//                    }
+//                }
+                responseWrapper.setData(tripRepo.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(current,Hour));
                 break;
             case TELEMETRY:
-                List<Telemetry> telemetry = new ArrayList<>();
-                for (Telemetry t : telemetryRepo.findAll()) {
-                    Instant telemetryTimestamp = Instant.ofEpochMilli(t.getTimestamp());
-                    if (telemetryTimestamp.equals(current) || telemetryTimestamp.isAfter(current)
-                            && telemetryTimestamp.isBefore(Hour) || telemetryTimestamp.equals(Hour)) {
-                        telemetry.add(t);
-                    }
-                }
-                responseWrapper.setData(telemetry);
+//                List<Telemetry> telemetry = new ArrayList<>();
+//                for (Telemetry t : telemetryRepo.findAll()) {
+//                    Instant telemetryTimestamp = Instant.ofEpochMilli(t.getTimestamp());
+//                    if (telemetryTimestamp.equals(current) || telemetryTimestamp.isAfter(current)
+//                            && telemetryTimestamp.isBefore(Hour) || telemetryTimestamp.equals(Hour)) {
+//                        telemetry.add(t);
+//                    }
+//                }
+                responseWrapper.setData(telemetryRepo.findByTimestampGreaterThanEqualAndTimestampLessThanEqual(current,Hour));
                 break;
         }
 
