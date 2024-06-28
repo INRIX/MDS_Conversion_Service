@@ -73,6 +73,8 @@ public class UniversalService {
 //                        trips.add(t);
 //                    }
 //                }
+//                TODO: THIS FUNCTION IS INCORRECT
+
                 responseWrapper.setData(tripRepo.findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(current,Hour));
                 break;
             case TELEMETRY:
