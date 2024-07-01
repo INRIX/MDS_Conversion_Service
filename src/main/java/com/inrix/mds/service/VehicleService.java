@@ -26,21 +26,31 @@ public class VehicleService {
     @Autowired
     EventRepo eventRepo;
 
-    public ResponseWrapper getVehicle() {
-        List<Vehicle> vehicle = new ArrayList<>();
-        ResponseWrapper responseWrapper = new ResponseWrapper();
-        for (Vehicle v : vehicleRepo.findAll()) {
-            if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(30)).toEpochMilli())) {
-                vehicle.add(v);
-            }
-        }
-        responseWrapper.setData("vehicle: " + vehicle);
-        return responseWrapper;
-    }
+//    public ResponseWrapper getVehicle() {
+//        List<Vehicle> vehicle = new ArrayList<>();
+//        ResponseWrapper responseWrapper = new ResponseWrapper();
+//        for (Vehicle v : vehicleRepo.findAll()) {
+//            if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(30)).toEpochMilli())) {
+//                vehicle.add(v);
+//            }
+//        }
+//        responseWrapper.setData("vehicle: " + vehicle);
+//        return responseWrapper;
+//    }
 
     public ResponseWrapper getVehicle(UUID val) {
-//        List<Vehicle> vehicle = new ArrayList<>();
         ResponseWrapper responseWrapper = new ResponseWrapper();
+        if (val == null){
+            List<Vehicle> vehicle = new ArrayList<>();
+            for (Vehicle v : vehicleRepo.findAll()) {
+                if (v.getEvents().getLast().getTimestamp() >= (Instant.now().minus(Duration.ofDays(30)).toEpochMilli())) {
+                    vehicle.add(v);
+                }
+            }
+            responseWrapper.setData(vehicle);
+            return responseWrapper;
+        }
+//        List<Vehicle> vehicle = new ArrayList<>();
 //
 //        for (Vehicle v : vehicleRepo.findAll()) {
 //            if (val == v.getDeviceId()) {

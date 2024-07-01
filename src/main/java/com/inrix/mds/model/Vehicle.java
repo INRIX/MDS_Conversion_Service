@@ -1,5 +1,6 @@
 package com.inrix.mds.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.inrix.mds.model.converter.PropulsionTypeConverter;
 import com.inrix.mds.model.enums.PropulsionType;
 import com.inrix.mds.model.enums.VehicleType;
@@ -38,6 +39,7 @@ public class Vehicle {
     private Integer maximumSpeed;
 
     @OneToMany(mappedBy = "vehicle")
+    @JsonManagedReference
     private List<Event> events;
 
     @NonNull

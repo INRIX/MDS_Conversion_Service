@@ -52,6 +52,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
+    @JsonBackReference
     private Vehicle vehicle;
 
     @PrePersist

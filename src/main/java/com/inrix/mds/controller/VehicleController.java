@@ -23,15 +23,15 @@ public class VehicleController {
     @Autowired
     VehicleService vehicleService;
 
-    @GetMapping()
+    @GetMapping({"/{deviceId}",""})
     @Operation(description = "Returns the specified vehicle (if a device_id is provided) or a list of vehicles. It contains vehicle properties that do not change often. When /vehicles is called without specifying a device ID it should return every vehicle on service in the last 30 days.")
-    public ResponseWrapper Vehicle (@Parameter(description = "Format: UUID - e.g 550e8400-e29b-41d4-a716-446655440000", required = false) @PathVariable(required = false) UUID deviceId) {
+    public ResponseWrapper Vehicle (@Parameter(description = "Format: UUID - e.g 550e8400-e29b-41d4-a716-446655440000") @PathVariable(required = false) UUID deviceId) {
         return vehicleService.getVehicle(deviceId);
     }
 
-    @GetMapping(value = "/status")
+    @GetMapping(value = {"/status/{deviceId}","/status"})
     @Operation(description = " Return the current status of all vehicles on the system, however vehicles not in a PROW state (removed, missing, elsewhere) will only persist in the feed for 90 minutes before being removed. If a device Id is specified, the vehicle is returned along with its vehicle state.")
-    public ResponseWrapper vehicleStatus (@Parameter(description = "Format: UUID - e.g 550e8400-e29b-41d4-a716-446655440000", required = false) @PathVariable(required = false) UUID deviceId){
+    public ResponseWrapper vehicleStatus (@Parameter(description = "Format: UUID - e.g 550e8400-e29b-41d4-a716-446655440000") @PathVariable(required = false) UUID deviceId){
         return vehicleService.getVehicleStatus(deviceId);
     }
 
