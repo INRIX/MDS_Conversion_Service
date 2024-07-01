@@ -48,7 +48,7 @@ public class fakeData {
         eventTypes.add(EventType.maintenance);
         eventTypes.add(EventType.trip_start);
         event.setEventTypes(eventTypes);
-        event.setTimestamp(1715500726423L);
+        event.setTimestamp(1718541688133L);
         event.setBatteryPercent(77);
 
         Trip t = new Trip();
@@ -59,8 +59,28 @@ public class fakeData {
         List<Trip> aa = new ArrayList<>();
         aa.add(t);
         event.setTripIds(aa);
+
+
+        List<Event> eee = new ArrayList<>();
+        eee.add(event);
+        Vehicle v = new Vehicle();
+        v.setVehicleId("TESTING");
+        v.setBatterCapacity(100);
+        v.setMaximumSpeed(1000);
+        v.setProviderId(UUID.randomUUID());
+        v.setVehicleType(VehicleType.delivery_robot);
+        v.setDeviceId(UUID.randomUUID());
+        List<PropulsionType> pp = new ArrayList<>();
+        pp.add(PropulsionType.human);
+        v.setPropulsionType(pp);
+        v.setEvents(eee);
+        vehicleRepository.save(v);
+        event.setVehicle(v);
+
         eventRepository.save(event);
         tripRepository.save(t);
+
+
 
 
 //        event.setTripIds(aa);
